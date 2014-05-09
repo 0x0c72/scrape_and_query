@@ -3,7 +3,7 @@
 #	Title: 		Bot Base Library Functions
 #	Author:		Chris Shenkan
 #	Date:		5/8/2014
-#	Version:	1.0.1
+#	Version:	1.0.3
 #
 
 from os import system
@@ -44,7 +44,7 @@ def query_yes_no(question, default="yes"):
 			sys.stdout.write("Please respond with 'yes' or 'no' "\
 							 "(or 'y' or 'n').\n")
 def print_version_info():
-	print "Hit Bot 3\t3.0.1\nBy Chris Shenkan\t5/8/2014\n"
+	print "Hit Bot\t0.3.1\nBy Chris Shenkan\t5/8/2014\n"
 
 def clear_screen():
 	system('clear')
@@ -115,7 +115,7 @@ def test_url(url):
 
 def parse_arguments():
 	parser = argparse.ArgumentParser(description='')
-	parser.add_argument("--version", help="Display version information.", action='version', version='HitBot3  -  version: 3.0.1  -  By Chris Shenkan 5/8/2014')
+	parser.add_argument("--version", help="Display version information.", action='version', version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
 	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', default="")
 	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None)
 	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None)
