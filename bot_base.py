@@ -6,6 +6,8 @@
 #	Version:	1.0.1
 #
 
+from os import system
+
 def query_yes_no(question, default="yes"):
 	"""Ask a yes/no question via raw_input() and return their answer.
 
@@ -37,3 +39,8 @@ def query_yes_no(question, default="yes"):
 		else:
 			sys.stdout.write("Please respond with 'yes' or 'no' "\
 							 "(or 'y' or 'n').\n")
+def print_version_info():
+	clear_screen()
+	print "Hit Bot 3\t3.0.1\nBy Chris Shenkan\t5/8/2014\n"
+def clear_screen():
+	system('clear')
