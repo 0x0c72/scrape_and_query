@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 #
 #	Title:	Hit Bot 1
-#	Author:	Chris Shenkan
-#	Date:	5/7/2014
-#	Version	0.3
+#	Author:		Chris Shenkan
+#	Date:		5/7/2014
+#	Version		1.0.2
 #
 
 import re, urllib
