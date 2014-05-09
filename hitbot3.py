@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 
 
 
-def main():
+def main(): # TODO: implement conditions to check for cmdline arguments before asking for input
 	parser, args = parse_arguments()
 	known, unknown = parser.parse_known_args()
 	print known
