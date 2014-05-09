@@ -16,7 +16,6 @@ import argparse
 from bs4 import BeautifulSoup
 
 
-
 def main(): # TODO: implement conditions to check for cmdline arguments before asking for input
 	parser, args = base.parse_arguments() # debug - semi-permanent
 	known, unknown = parser.parse_known_args() # debug semi-permanent
