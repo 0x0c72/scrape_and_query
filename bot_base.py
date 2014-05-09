@@ -114,7 +114,7 @@ def test_url(url):
 		get_url()
 
 def parse_arguments():
-	parser = argparse.ArgumentParser(description='')
+	parser = argparse.ArgumentParser(description='Scrapes a given website for links and then sends repeated requests to them.')
 	parser.add_argument("--version", help="Display version information.", action='version', version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
 	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', default="")
 	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None)

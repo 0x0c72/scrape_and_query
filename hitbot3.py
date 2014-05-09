@@ -9,7 +9,6 @@
 import sys
 import requests
 import os
-#from bot_base import *
 import bot_base as base 
 import fileinput
 import re
@@ -24,8 +23,11 @@ def main(): # TODO: implement conditions to check for cmdline arguments before a
 	print known # debug
 	print unknown # debug
 	print known.url * 10 # debug
-	url = base.get_url()
-	base.test_url(url)
+	if known.url == '':
+		url = base.get_url()
+		base.test_url(url)
+	else:
+		url = known.url
 
 if __name__ == '__main__':
 	main()
