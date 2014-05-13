@@ -3,7 +3,7 @@
 #   Title:  	Hit Bot
 #   Author: 	Chris Shenkan
 #   Date:   	5/7/2014
-#   Version 	0.3.1
+#   Version 	0.3.2
 #
 
 import sys
@@ -24,9 +24,11 @@ def main(): # TODO: implement conditions to check for cmdline arguments before a
 	print known.url * 10 # debug
 	if known.url == '':
 		url = base.get_url()
-		base.test_url(url)
 	else:
 		url = known.url
+	while base.test_url(url) is False:
+		url = base.get_url()
+	
 
 if __name__ == '__main__':
 	main()

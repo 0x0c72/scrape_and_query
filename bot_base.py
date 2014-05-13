@@ -3,11 +3,11 @@
 #	Title: 		Bot Base Library Functions
 #	Author:		Chris Shenkan
 #	Date:		5/8/2014
-#	Version:	1.0.3
+#	Version:	0.1.4
 #
 
 from os import system
-from requests import get
+import requests
 import sys
 import time
 import argparse
@@ -43,15 +43,6 @@ def query_yes_no(question, default="yes"):
 		else:
 			sys.stdout.write("Please respond with 'yes' or 'no' "\
 							 "(or 'y' or 'n').\n")
-def print_version_info():
-	print "Hit Bot\t0.3.1\nBy Chris Shenkan\t5/8/2014\n"
-
-def clear_screen():
-	system('clear')
-
-def make_request(url):
-	response = get(url)
-	return response
 
 def get_current_date():
 	now = datetime.datetime.now()
@@ -65,20 +56,26 @@ def clean_url(url):
 	host = host.replace(".com", "")
 	host = host.replace(".net", "")
 	host = host.replace(".org", "")
+	if host.startswith('"'):
+		host = host[1:]
+	if host.endswith('"'):
+		host = host[:-1]
 	return host
 
 def create_log_filename(url): # TODO: implement into get_url
 	host = clean_url(url)
 	currentDate = get_current_date()
 	textfile = host + "_scrape_" + "-".join(currentDate) + ".txt"
+	return textfile
 
-def create_logfile(filename): # TODO: implement logfile creation 
-	sys.exit(1)
+def create_logfile(url): # TODO: implement logfile creation 
+	filename = create_log_filename(url)
+
 
 def get_url():
 	try:
 		print "Enter a url to be scraped..."
-		print 'Usage  - "http://google.com/" <-- With the double quotes'
+		print 'Usage  -  http://google.com/'
 		print "'Q' or 'q' to quit"
 		url = raw_input("URL: ")
 
@@ -90,28 +87,44 @@ def get_url():
 	except SyntaxError, s1:
 		print "Error\nDescription %s" % s1
 		get_url()
-
+	if url.endswith('"') is False and url.startswith('"') is False and url is not '':
+		url = url + '"'
+	if url.startswith('"') is False and url.endswith('"') is True and url is not '':
+		url = '"' + url
 	try:
 		url = eval(url) 
 	except SyntaxError, s2:
-		print "You can't enter nothing for the URL!\n"
+		if url is '':
+			print "You can't enter nothing for the URL!\n"
+		else:
+			print "%s" % s2
 		get_url()
 	return url
-
+ 
 def test_url(url):
-	res = make_request(url)
+	try:
+		response = requests.get(url)
+		responseCode = int(response.status_code)
+	except (requests.exceptions.MissingSchema), re1:
+		print re1
+		print "Missing Schema, tryin entering the url with http://"
+		return False
+	except requests.HTTPError, re2:
+		print "HTTP Error %s occured!" % re2.code
+		return False
 
-	if 300 <= int(res.status_code) > 400:
-		print "Request failed: Response code: %d" % int(res.status_code)
-		get_url()
-	elif int(res.status_code) >= 400:
-		print "Request failed: Response code: %d" % int(res.status_code)
-		get_url()
-	elif 200 <= int(res.status_code) < 300:
-		print "Success!\nURL %s, returned Status Code: %d" % (str(url), int(res.status_code))
+	if 300 <= responseCode > 400:
+		print "Request Failed\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		return False
+	elif responseCode >= 400:
+		print "Request Failed\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		return False
+	elif 200 <= responseCode < 300:
+		print "Success!\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		return True
 	else:
-		print "Request failed: Reason Unknown"
-		get_url()
+		print "Request Failed\nURL: %s, returned invalid status code." % str(url)
+		return False
 
 def parse_arguments():
 	parser = argparse.ArgumentParser(description='Scrapes a given website for links and then sends repeated requests to them.')
