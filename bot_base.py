@@ -13,14 +13,14 @@ import time
 import argparse
 
 def query_yes_no(question, default="yes"):
-	"""Ask a yes/no question via raw_input() and return their answer.
+	"""
+	Ask a yes/no question via raw_input() and return their answer.
 
-	"question" is a string that is presented to the user.
-	"default" is the presumed answer if the user just hits <Enter>.
+	@param string question a string that is presented to the user.
+	@param string default the presumed answer if the user just hits <Enter>.
 		It must be "yes" (the default), "no" or None (meaning
 		an answer is required of the user).
-
-	The "answer" return value is one of "yes" or "no".
+	@return boolean valid True or False
 	"""
 	valid = {"yes":True,   "y":True,  "ye":True,
 			 "no":False,     "n":False}
@@ -45,11 +45,24 @@ def query_yes_no(question, default="yes"):
 							 "(or 'y' or 'n').\n")
 
 def get_current_date():
+	"""
+	Returns the date as an array of month, day, and year using
+		datetime.now()
+
+	@return currentDate array of strings containg the date [month, day, year]
+	"""
 	now = datetime.datetime.now()
 	currentDate = [str(now.month), str(now.day), str(now.year)]
 	return currentDate
 
-def clean_url(url):
+def clean_url(url): # ^(http|https)://
+	"""
+	Takes a string and returns the string 'cleaned' for use as the log filename.
+
+	@param string url from input() or argparse, unmodified
+	@return host string modified for use as log filename, 
+		removed protocol, www, and frequently used TLDs
+	"""
 	host = url.replace("http://", "")
 	host = host.replace("https://", "")
 	host = host.replace("www.", "")
@@ -62,17 +75,29 @@ def clean_url(url):
 		host = host[:-1]
 	return host
 
-def create_log_filename(url): # TODO: implement into get_url
+def create_log_filename(url): 
+	"""
+	Function to return the full filename for the log file.
+
+	@param url string the url in raw form from input or argparse
+	@return textfile string the log filename as a string for use in creating the file
+	"""
 	host = clean_url(url)
 	currentDate = get_current_date()
 	textfile = host + "_scrape_" + "-".join(currentDate) + ".txt"
 	return textfile
 
-def create_logfile(url): # TODO: implement logfile creation 
-	filename = create_log_filename(url)
+def create_log_file(filename): # TODO: implement logfile creation 
+	sys.exit(1)
 
 
 def get_url():
+	"""
+	Prompts the user for url input.  Adds double-quotes and checks if it's
+	empty.  Then returns the input.  Exits the program when the input is Q or q.
+
+	@return url string the users url input
+	"""
 	try:
 		print "Enter a url to be scraped..."
 		print 'Usage  -  http://google.com/'
@@ -102,6 +127,13 @@ def get_url():
 	return url
  
 def test_url(url):
+	"""
+	Tests the url given for a response. Returns false for all response codes
+	at or over 300 and under 200.  Returns true for 200.
+
+	@param url string url from input, double quoted
+	@return True or False based on return code
+	"""
 	try:
 		response = requests.get(url)
 		responseCode = int(response.status_code)
@@ -127,10 +159,16 @@ def test_url(url):
 		return False
 
 def parse_arguments():
-	parser = argparse.ArgumentParser(description='Scrapes a given website for links and then sends repeated requests to them.')
+	"""
+	Function to parse the arguments passed on command line with argparse module
+
+	@return args, known_args, unknown_args dicts from parser's namespace
+	"""
+	parser = argparse.ArgumentParser(prog='HitBot', description='Scrapes a given website for links and then sends repeated requests to them.')
 	parser.add_argument("--version", help="Display version information.", action='version', version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
-	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', default="")
-	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None)
+	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', const="", default="")
+	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None) # const defaults to None
 	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None)
 	args = parser.parse_args()
-	return parser, args
+	known_args, unknown_args = parser.parse_known_args()
+	return args, known_args, unknown_args

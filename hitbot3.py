@@ -17,18 +17,28 @@ from bs4 import BeautifulSoup
 
 
 def main(): # TODO: implement conditions to check for cmdline arguments before asking for input
-	parser, args = base.parse_arguments() # debug - semi-permanent
-	known, unknown = parser.parse_known_args() # debug semi-permanent
-	print known # debug
-	print unknown # debug
-	print known.url * 10 # debug
-	if known.url == '':
+	args, known_args, unknown_args = base.parse_arguments() # debug - semi-permanent
+	print known_args # debug
+	print unknown_args # debug
+	print known_args.url * 10 # debug
+
+	if known_args.url == '':
 		url = base.get_url()
 	else:
-		url = known.url
+		url = known_args.url
 	while base.test_url(url) is False:
 		url = base.get_url()
-	
+
+	if known_args.outfile is not None:
+		outfile = known_args.outfile
+	else:
+		outfile = base.create_log_filename(url)
+	if known_args.infile is not None:
+		infile = known_args.infile
+	else:
+		infile = None
+
+
 
 if __name__ == '__main__':
 	main()
