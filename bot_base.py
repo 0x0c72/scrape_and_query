@@ -17,8 +17,8 @@ def query_yes_no(question, default="yes"):
 	Ask a yes/no question via raw_input() and return their answer.
 
 	@param string question a string that is presented to the user.
-	@param string default the presumed answer if the user just hits <Enter>.
-		It must be "yes" (the default), "no" or None (meaning
+	@param string default the presumed answer if the user just hits 
+		<Enter>.  It must be "yes" (the default), "no" or None (meaning
 		an answer is required of the user).
 	@return boolean valid True or False
 	"""
@@ -49,7 +49,8 @@ def get_current_date():
 	Returns the date as an array of month, day, and year using
 		datetime.now()
 
-	@return currentDate array of strings containg the date [month, day, year]
+	@return currentDate array of strings containg the date 
+		[month, day, year]
 	"""
 	now = datetime.datetime.now()
 	currentDate = [str(now.month), str(now.day), str(now.year)]
@@ -57,22 +58,18 @@ def get_current_date():
 
 def clean_url(url): # ^(http|https)://
 	"""
-	Takes a string and returns the string 'cleaned' for use as the log filename.
+	Takes a string and returns the string 'cleaned' for use as the log 
+		filename.
 
 	@param string url from input() or argparse, unmodified
 	@return host string modified for use as log filename, 
-		removed protocol, www, and frequently used TLDs
+		removed protocol and www
 	"""
 	host = url.replace("http://", "")
 	host = host.replace("https://", "")
 	host = host.replace("www.", "")
-	host = host.replace(".com", "")
-	host = host.replace(".net", "")
-	host = host.replace(".org", "")
-	if host.startswith('"'):
-		host = host[1:]
-	if host.endswith('"'):
-		host = host[:-1]
+	host.strip('"')
+	host.strip()
 	return host
 
 def create_log_filename(url): 
@@ -80,7 +77,8 @@ def create_log_filename(url):
 	Function to return the full filename for the log file.
 
 	@param url string the url in raw form from input or argparse
-	@return textfile string the log filename as a string for use in creating the file
+	@return textfile string the log filename as a string for use in 
+		creating the file
 	"""
 	host = clean_url(url)
 	currentDate = get_current_date()
@@ -93,8 +91,9 @@ def create_log_file(filename): # TODO: implement logfile creation
 
 def get_url():
 	"""
-	Prompts the user for url input.  Adds double-quotes and checks if it's
-	empty.  Then returns the input.  Exits the program when the input is Q or q.
+	Prompts the user for url input.  Adds double-quotes and checks if 
+		it's empty.  Then returns the input.  Exits the program when 
+		the input is Q or q.
 
 	@return url string the users url input
 	"""
@@ -128,8 +127,8 @@ def get_url():
  
 def test_url(url):
 	"""
-	Tests the url given for a response. Returns false for all response codes
-	at or over 300 and under 200.  Returns true for 200.
+	Tests the url given for a response. Returns false for all response 
+		codes at or over 300 and under 200.  Returns true for 200.
 
 	@param url string url from input, double quoted
 	@return True or False based on return code
@@ -160,12 +159,16 @@ def test_url(url):
 
 def parse_arguments():
 	"""
-	Function to parse the arguments passed on command line with argparse module
+	Function to parse the arguments passed on command line with 
+		argparse module
 
-	@return args, known_args, unknown_args dicts from parser's namespace
+	@return args, known_args, unknown_args dicts from parser's 
+		namespace
 	"""
-	parser = argparse.ArgumentParser(prog='HitBot', description='Scrapes a given website for links and then sends repeated requests to them.')
-	parser.add_argument("--version", help="Display version information.", action='version', version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
+	parser = argparse.ArgumentParser(prog='HitBot', description='Scrapes a given website for links '\
+										'and then sends repeated requests to them.')
+	parser.add_argument("--version", help="Display version information.", action='version', 
+							version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
 	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', const="", default="")
 	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None) # const defaults to None
 	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None)

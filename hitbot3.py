@@ -17,10 +17,7 @@ from bs4 import BeautifulSoup
 
 
 def main(): # TODO: implement conditions to check for cmdline arguments before asking for input
-	args, known_args, unknown_args = base.parse_arguments() # debug - semi-permanent
-	print known_args # debug
-	print unknown_args # debug
-	print known_args.url * 10 # debug
+	args, known_args, unknown_args = base.parse_arguments() 
 
 	if known_args.url == '':
 		url = base.get_url()
