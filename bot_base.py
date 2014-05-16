@@ -170,8 +170,7 @@ def parse_arguments():
 	parser.add_argument("--version", help="Display version information.", action='version', 
 							version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
 	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', const="", default="")
-	parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=None) # const defaults to None
-	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None)
+	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None) # const defaults to None
 	args = parser.parse_args()
 	known_args, unknown_args = parser.parse_known_args()
 	return args, known_args, unknown_args

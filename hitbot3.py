@@ -30,11 +30,6 @@ def main(): # TODO: implement conditions to check for cmdline arguments before a
 		outfile = known_args.outfile
 	else:
 		outfile = base.create_log_filename(url)
-	if known_args.infile is not None:
-		infile = known_args.infile
-	else:
-		infile = None
-
 
 
 if __name__ == '__main__':
