@@ -23,11 +23,12 @@ def check_url(url):
 	
 
 def main():
-	urlList = ['http://bostonfanfavorites.com', 'http://google.com', 'http://google.com']
+	url_list = ['http://bostonfanfavorites.com', 'http://google.com',
+				 'http://google.com']
 	i = 1
 	ta = []
 	name = "Thread"
-	for url in urlList:
+	for url in url_list:
 		tName = name + str(i)
 		print "Initializing thread %s" % tName
 		tName = getterThread(i, url)

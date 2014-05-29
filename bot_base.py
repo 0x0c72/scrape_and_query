@@ -18,8 +18,8 @@ def query_yes_no(question, default="yes"):
 
 	@param string question a string that is presented to the user.
 	@param string default the presumed answer if the user just hits 
-		<Enter>.  It must be "yes" (the default), "no" or None (meaning
-		an answer is required of the user).
+	<Enter>.  It must be "yes" (the default), "no" or None (meaning
+	an answer is required of the user).
 	@return boolean valid True or False
 	"""
 	valid = {"yes":True,   "y":True,  "ye":True,
@@ -47,10 +47,10 @@ def query_yes_no(question, default="yes"):
 def get_current_date():
 	"""
 	Returns the date as an array of month, day, and year using
-		datetime.now()
+	datetime.now()
 
 	@return currentDate array of strings containg the date 
-		[month, day, year]
+	[month, day, year]
 	"""
 	now = datetime.datetime.now()
 	currentDate = [str(now.month), str(now.day), str(now.year)]
@@ -59,11 +59,11 @@ def get_current_date():
 def clean_url(url): # ^(http|https)://
 	"""
 	Takes a string and returns the string 'cleaned' for use as the log 
-		filename.
+	filename.
 
 	@param string url from input() or argparse, unmodified
 	@return host string modified for use as log filename, 
-		removed protocol and www
+	removed protocol and www
 	"""
 	host = url.replace("http://", "")
 	host = host.replace("https://", "")
@@ -78,7 +78,7 @@ def create_log_filename(url):
 
 	@param url string the url in raw form from input or argparse
 	@return textfile string the log filename as a string for use in 
-		creating the file
+	creating the file
 	"""
 	host = clean_url(url)
 	currentDate = get_current_date()
@@ -92,8 +92,8 @@ def create_log_file(filename): # TODO: implement logfile creation
 def get_url():
 	"""
 	Prompts the user for url input.  Adds double-quotes and checks if 
-		it's empty.  Then returns the input.  Exits the program when 
-		the input is Q or q.
+	it's empty.  Then returns the input.  Exits the program when 
+	the input is Q or q.
 
 	@return url string the users url input
 	"""
@@ -111,10 +111,13 @@ def get_url():
 	except SyntaxError, s1:
 		print "Error\nDescription %s" % s1
 		get_url()
-	if url.endswith('"') is False and url.startswith('"') is False and url is not '':
-		url = url + '"'
-	if url.startswith('"') is False and url.endswith('"') is True and url is not '':
-		url = '"' + url
+
+	# Clean url string for later use
+	if url is not '':	
+		if url.endswith('"') and not url.startswith('"'):
+			url = url + '"'
+		if not url.startswith('"') and url.endswith('"'):
+			url = '"' + url
 	try:
 		url = eval(url) 
 	except SyntaxError, s2:
@@ -128,7 +131,7 @@ def get_url():
 def test_url(url):
 	"""
 	Tests the url given for a response. Returns false for all response 
-		codes at or over 300 and under 200.  Returns true for 200.
+	codes at or over 300 and under 200.  Returns true for 200.
 
 	@param url string url from input, double quoted
 	@return True or False based on return code
@@ -138,39 +141,48 @@ def test_url(url):
 		responseCode = int(response.status_code)
 	except (requests.exceptions.MissingSchema), re1:
 		print re1
-		print "Missing Schema, tryin entering the url with http://"
+		print "Missing Schema"
 		return False
 	except requests.HTTPError, re2:
-		print "HTTP Error %s occured!" % re2.code
+		print "HTTP Error occured: %s" % re2.code
 		return False
 
 	if 300 <= responseCode > 400:
-		print "Request Failed\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		print "Request Failed\nURL: %s,\nreturned status code: %d" % (str(url), 
+			int(res.status_code))
 		return False
 	elif responseCode >= 400:
-		print "Request Failed\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		print "Request Failed\nURL: %s,\nreturned status code: %d" % (str(url), 
+			int(res.status_code))
 		return False
 	elif 200 <= responseCode < 300:
-		print "Success!\nURL: %s, returned Status Code: %d" % (str(url), int(res.status_code))
+		print "Success!\nURL: %s,\nreturned status code: %d" % (str(url), 
+			int(res.status_code))
 		return True
 	else:
-		print "Request Failed\nURL: %s, returned invalid status code." % str(url)
+		print "Request Failed\nURL: %s\nReason: Unknown" % str(url)
 		return False
 
 def parse_arguments():
 	"""
 	Function to parse the arguments passed on command line with 
-		argparse module
+	argparse module
 
 	@return args, known_args, unknown_args dicts from parser's 
-		namespace
+	namespace
 	"""
-	parser = argparse.ArgumentParser(prog='HitBot', description='Scrapes a given website for links '\
-										'and then sends repeated requests to them.')
-	parser.add_argument("--version", help="Display version information.", action='version', 
-							version='HitBot  -  version: 0.3.1  -  By Chris Shenkan 5/8/2014')
-	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?', const="", default="")
-	parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=None) # const defaults to None
+	parser = argparse.ArgumentParser(prog='HitBot', 
+									description='Scrapes a given website for '\
+									' links and then sends repeated requests '\
+									'to them.')
+	parser.add_argument("--version", help="Display version information.", 
+						action='version', 
+						version='HitBot  -  version: 0.3.1  -  By Chris' \
+						 ' Shenkan 5/8/2014')
+	parser.add_argument("-u", "--url", help="Specify URL to parse.", nargs='?',
+	 					const="", default="")
+	parser.add_argument('-o', '--outfile', nargs='?', 
+						type=argparse.FileType('w'), default=None)
 	args = parser.parse_args()
 	known_args, unknown_args = parser.parse_known_args()
 	return args, known_args, unknown_args
